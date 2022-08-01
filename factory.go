@@ -1,6 +1,7 @@
 package mule_test_exporter
 
 import (
+	"context"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 )
@@ -19,5 +20,11 @@ func createDefaultConfig() config.Exporter {
 
 func NewFactory() component.ExporterFactory {
 	return component.NewExporterFactory(typeStr,
-		createDefaultConfig)
+		createDefaultConfig,
+		component.WithTracesExporter(createTracesExporter),
+	)
+}
+
+func createTracesExporter(_ context.Context, set component.ExporterCreateSettings, config config.Exporter) (component.TracesExporter, error) {
+	return nil, nil
 }
