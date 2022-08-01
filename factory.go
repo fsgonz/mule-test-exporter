@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
+	"go.opentelemetry.io/collector/consumer/consumertest"
 )
 
 const (
@@ -26,5 +27,19 @@ func NewFactory() component.ExporterFactory {
 }
 
 func createTracesExporter(_ context.Context, set component.ExporterCreateSettings, config config.Exporter) (component.TracesExporter, error) {
-	return nil, nil
+	return nopExporterInstance, nil
+}
+
+var nopExporterInstance = &nopExporter{
+	Consumer: consumertest.NewNop(),
+}
+
+type nopExporter struct {
+	nopComponent
+	consumertest.Consumer
+}
+
+type nopComponent struct {
+	component.StartFunc
+	component.ShutdownFunc
 }
